@@ -4,41 +4,74 @@
 // Perform the operation on the two numbers.
 // Print the result to the terminal.
 
-// Allow input from the user to be stored for use in the program with readline-sync.
+// Allow input from the user to be stored for use in the program.
 const readline = require('readline-sync');
 
+// A function to give our messages a more distinctive look.
+function prompt(message) {
+  console.log(`=> ${message}`);
+}
+
+// A function to check that a valid number has been given.
+function invalidNum(num) {
+  return num.trimStart() === '' || Number.isNaN(Number(num));
+}
+
 // Greet the user.
-console.log('Welcome to Calculator!');
+prompt('Welcome to Calculator!');
 
 // Ask the user for the first number.
-console.log("What's the first number?")
+prompt("What's the first number?");
 
 // Store user input in a variable.
 let num1 = readline.question();
 
+// Check if the first number is a valid.
+while (invalidNum(num1)) {
+  prompt("Hmm... that doesn't look like a valid number.");
+  num1 = readline.question();
+}
+
 // Ask the user for the second number.
-console.log("What's the second number?")
+prompt("What's the second number?");
 
 // Store user input in a variable.
 let num2 = readline.question();
 
+// Check if the second number is valid.
+while (invalidNum(num2)) {
+  prompt("Hmm... that doesn't look like a valid number.");
+  num2 = readline.question();
+}
+
 // Ask user which operation to perform.
-console.log('What operation would you like to perform?\n1) Add 2) Subtract 3) Multiply 4) Divide');
+prompt('What operation would you like to perform?\n1) Add 2) Subtract 3) Multiply 4) Divide');
 
 // Store user input in a variable.
 let operation = readline.question();
 
+// Check that the user input 1, 2, 3, or 4 only.
+while (!['1', '2', '3', '4'].includes(operation)) {
+  prompt('Please choose 1, 2, 3, or 4');
+  operation = readline.question();
+}
+
 // Flow control depending on user's choice of operation.
 let output;
-if (operation === '1') {
-  output = Number(num1) + Number(num2);
-} else if (operation === '2') {
-  output = Number(num1) - Number(num2);
-} else if (operation === '3') {
-  output = Number(num1) * Number(num2);
-} else if (operation === '4') {
-  output = Number(num1) / Number(num2);
-} 
+switch (operation) {
+  case '1':
+    output = Number(num1) + Number(num2);
+    break;
+  case '2':
+    output = Number(num1) - Number(num2);
+    break;
+  case '3':
+    output = Number(num1) * Number(num2);
+    break;
+  case '4':
+    output = Number(num1) / Number(num2);
+    break;
+}
 
 // Log the result to the console.
-console.log(`The result is: ${output}`);
+prompt(`The result is: ${output}`);
