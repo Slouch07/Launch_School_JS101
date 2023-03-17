@@ -1,0 +1,9 @@
+{
+  "welcome": "Welcome to the Loan Calculator!",
+  "loanAmount": "Enter the amount of the loan:",
+  "annualPercentRate": "Enter the Annual Percentage Rate:",
+  "loanDuration": "Enter the duration of the loan (Years):",
+  "invalidNumber": "Hmm...that doesn't look like a valid number.",
+  "pay": "Your monthly payment is: ",
+  "anotherCalc": "Would you like to perform another calculation? y or n"
+}
