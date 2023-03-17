@@ -17,4 +17,3 @@ function greetings(arr, obj) {
 console.log(
   greetings(["Ryan", "Bowler"], { title: "Master", occupation: "Electrician"})
 );
-// logs Hello, John Q Doe! Nice to have a Master Plumber around.
