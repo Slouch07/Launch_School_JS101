@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 // A loan calculator program.
 
 // Load JSON config file into the program.
@@ -21,67 +22,115 @@ function invalidNum(num) {
   return num.trimStart() === '' || Number.isNaN(Number(num));
 }
 
+// A function to greet the user.
+function greeting(str) {
+  prompt(messages(str));
+}
+
+// A function to get a valid loan amount from the user.
+function getLoanAmount() {
+  let loanAmnt = readline.question();
+  while (invalidNum(loanAmnt) || loanAmnt <= 0) {
+    prompt(messages('invalidNumber'));
+    loanAmnt = readline.question();
+  }
+  return loanAmnt;
+}
+
+// A function to get a valid loan APR from the user.
+function getAPR() {
+  let annualPercentRate = readline.question();
+  while (invalidNum(annualPercentRate) || annualPercentRate <= 0) {
+    prompt(messages('invalidNumber'));
+    annualPercentRate = readline.question();
+  }
+  return annualPercentRate;
+}
+
+// A function to get a valid loan duration from the user.
+function getLoanDuration() {
+  let loanInYrs = readline.question();
+  while (invalidNum(loanInYrs) || loanInYrs <= 0) {
+    prompt(messages('invalidNumber'));
+    loanInYrs = readline.question();
+  }
+  return loanInYrs;
+}
+
+// A function to calculate the monthly payment on the loan.
+function monthlyPayment(loan, apr, duration) {
+  let monthlyInt = (apr / 100) / 12;
+  let loanInMnths = duration * 12;
+  let payment = loan * (monthlyInt / (1 - Math.pow((1 + monthlyInt), (-loanInMnths))));
+  return payment;
+}
+
+// A function to report the monthly payment to the user.
+function reportPayment(string, payment) {
+  prompt(messages(string) + "$" + Number(payment).toFixed(2));
+}
+
+// A function to get the user's decision to use the calculator again.
+function anotherCalc() {
+  let choice = readline.question().toLowerCase();
+  while (choice !== 'yes' && choice !== 'no') {
+    prompt(messages('invalidChoice'));
+    choice = readline.question().toLowerCase();
+    if (choice === 'yes' || choice === 'no') {
+      break;
+    }
+  }
+  return choice;
+}
+
+// A function to say good bye to the user.
+function farewell() {
+  console.clear();
+  prompt(messages('farewell'));
+}
+
 // A variable to store the status of the calculator program.
 let isRunning = true;
 
 // // Main loop which will stop if the user chooses not to perform another calc.
 while (isRunning) {
 
+  // Clear the console.
+  console.clear();
+
   // Greet the user.
-  prompt(messages('welcome'));
+  greeting('welcome');
 
   // Ask the user for the amount of the loan and store it in a variable.
-  prompt('Enter the loan amount: ');
-  let loanAmnt = readline.question();
-
-  // Check if the the loanAmount is a valid number.
-  while (invalidNum(loanAmnt)) {
-    prompt(messages('invalidNumber'));
-    loanAmnt = readline.question();
-  }
+  prompt(messages('loanAmnt'));
+  let loanAmount = getLoanAmount();
+  console.clear();
 
   // Ask the user for the APR on the loan.
-  prompt('Enter a loan APR greater than 0% (Example: 5 = 5%): ');
-  let annualPercentRate = readline.question();
-
-  while (invalidNum(annualPercentRate) || annualPercentRate <= 0) {
-    prompt(messages('invalidNumber'));
-    annualPercentRate = readline.question();
-  }
+  prompt(messages('annualPercentRate'));
+  let apr = getAPR();
+  console.clear();
 
   // Ask the user for the loan duration in years.
-  prompt('Enter the loan duration (Years): ');
-  let loanInYrs = readline.question();
+  prompt(messages('loanDuration'));
+  let loanLength = getLoanDuration();
+  console.clear();
 
-  while (invalidNum(loanInYrs)) {
-    prompt(messages('invalidNumber'));
-    loanInYrs = readline.question();
-  }
-
-  // Calculate monthly interest rate.
-  let monthlyInt = (annualPercentRate / 100) / 12;
-
-  // Calculate loan duration in months.
-  let loanInMnths = loanInYrs * 12;
-
-  // Calculate monthly payment.
-  // eslint-disable-next-line max-len
-  let payment = loanAmnt * (monthlyInt / (1 - Math.pow((1 + monthlyInt), (-loanInMnths))));
+  // Calculate the monthly payment and store the value.
+  let payment = monthlyPayment(loanAmount, apr, loanLength);
 
   // Log the result to the console.
-  prompt(messages('pay') + "$" + Number(payment).toFixed(2));
+  reportPayment('pay', payment);
 
   // Ask the user if they would like another calculation.
   prompt(messages('anotherCalc'));
-  let choice = readline.question().toLowerCase();
-  while (choice[0] !== 'y' && choice[0] !== 'n') {
-    console.log("Please enter 'y' or 'n'.");
-    choice = readline.question().toLowerCase();
-    if (choice[0] === 'y') {
-      break;
-    } else if (choice[0] === 'n') {
-      isRunning = false;
-    }
+  let answer = anotherCalc();
+
+  // If the user says no, terminate the program.
+  if (answer === 'no') {
+    isRunning = false;
   }
-  console.log('Good Bye!');
+
+  // Say good bye to the user.
+  farewell();
 }

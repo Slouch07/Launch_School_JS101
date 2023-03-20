@@ -1,9 +1,11 @@
 {
   "welcome": "Welcome to the Loan Calculator!",
-  "loanAmount": "Enter the amount of the loan:",
-  "annualPercentRate": "Enter the Annual Percentage Rate:",
-  "loanDuration": "Enter the duration of the loan (Years):",
+  "loanAmnt": "Enter the amount of the loan (must be greater than 0) :",
+  "annualPercentRate": "Enter a loan APR greater than 0% (Example: 5 = 5%): ",
+  "loanDuration": "Enter the duration of the loan in Years (must be greater than 0): ",
   "invalidNumber": "Hmm...that doesn't look like a valid number.",
   "pay": "Your monthly payment is: ",
-  "anotherCalc": "Would you like to perform another calculation? y or n"
+  "anotherCalc": "Would you like to perform another calculation? yes or no",
+  "invalidChoice": "Please enter 'yes' or 'no'.",
+  "farewell": "Thanks for using the loan calculator...Good Bye!"
 }
