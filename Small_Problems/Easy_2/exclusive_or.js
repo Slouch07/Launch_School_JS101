@@ -17,5 +17,6 @@ console.log(xor(1, 1) === false);         // true
 console.log(xor(true, true) === false);   // true
 console.log(xor('', 'true') === true);    // true
 console.log(xor('', 0) === false);        // true
+console.log(xor('', '') === false);       // true
 
 
