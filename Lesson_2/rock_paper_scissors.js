@@ -1,10 +1,94 @@
-// A Rock, Paper, Scissors program.
+/* eslint-disable max-len */
+
+// A Rock, Paper, Scissors game written in JavaScript.
 
 // Import 'readline-sync' to allow for user input.
 const readline = require('readline-sync');
 
-// A constant variable to store the games valid choices.
-const VALID_CHOICES = ['rock', 'paper', 'scissors'];
+// An object to store the games valid choices.
+const VALID_CHOICES = {
+  r: 'rock',
+  p: 'paper',
+  s: 'scissors',
+  l: 'lizard',
+  S: 'spock'
+};
+
+// Variables to store the scores for the user and computer.
+let playerScore = 0;
+let computerScore = 0;
+
+// A function to update the score.
+function updateScore(winner) {
+  if (winner === 'user') {
+    playerScore += 1;
+  } else if (winner === 'computer') {
+    computerScore += 1;
+  } else {
+    console.log('Score stays the same.');
+  }
+}
+
+// A function to check for a grand winner.
+function checkScore() {
+  if (playerScore === 3) {
+    console.log('You are the grand winner!');
+  } else if (computerScore === 3) {
+    console.log('The computer is the grand winner!');
+  } else {
+    console.log(`Player score: ${playerScore} | Computer score: ${computerScore}`);
+  }
+}
+
+// A function to display the users choices.
+function displayChoices(choices) {
+  for (let [key, value] of Object.entries(choices)) {
+    console.log(`${key} ==> ${value}`);
+  }
+}
+
+// A function to generate the computer's choice.
+function getComputerChoice(obj) {
+  let choiceArray = Object.keys(obj);
+  let randomIndex = Math.floor(Math.random() * choiceArray.length);
+  return choiceArray[randomIndex];
+}
+
+// A function to validate the user's input.
+function validChoice(choice) {
+  while (!VALID_CHOICES.hasOwnProperty(choice)) {
+    prompt("That's not a valid choice.");
+    choice = readline.question();
+  }
+  return choice;
+}
+
+// A function to get the users input.
+function getUserChoice() {
+  prompt('Choose one: ');
+  displayChoices(VALID_CHOICES);
+  return readline.question();
+}
+
+// A function to reset the scores to zero.
+function scoreReset() {
+  playerScore = 0;
+  computerScore = 0;
+}
+
+// A function to ask the user if they want to play again.
+function playAgain() {
+  scoreReset();
+  let choice = readline.question().toLowerCase();
+  while (choice !== 'yes' && choice !== 'no') {
+    prompt("That's not a valid choice.");
+    choice = readline.question().toLowerCase();
+    if (choice === 'yes' || choice === 'no') {
+      break;
+    }
+  }
+  return choice;
+}
 
 // A prompt function
 function prompt(message) {
@@ -13,48 +97,50 @@ function prompt(message) {
 
 // A function to display the winner.
 function displayWinner (choice, computerChoice) {
-  if ((choice === 'rock' && computerChoice === 'scissors') ||
-      (choice === 'paper' && computerChoice === 'rock') ||
-      (choice === 'scissors' && computerChoice === 'paper')) {
+  if ((choice === 'rock' && (computerChoice === 'scissors' || computerChoice === 'lizard')) ||
+      (choice === 'paper' && (computerChoice === 'rock' || computerChoice === 'spock')) ||
+      (choice === 'scissors' && (computerChoice === 'paper' || computerChoice === 'lizard')) ||
+      (choice === 'lizard' && (computerChoice === 'paper' || computerChoice === 'spock')) ||
+      (choice === 'spock' && (computerChoice === 'rock' || computerChoice === 'scissors'))) {
     prompt('You win!');
-  } else if ((choice === 'rock' && computerChoice === 'paper') ||
-        (choice === 'paper' && computerChoice === 'scissors') ||
-        (choice === 'scissors' && computerChoice === 'rock')) {
-    prompt('Computer wins!');
-  } else {
+    return 'user';
+  } else if (choice === computerChoice) {
     prompt("It's a tie!");
+    return 'tie';
+  } else {
+    prompt("Computer wins!");
+    return 'computer';
   }
 }
 
 while (true) {
+  console.clear();
+  prompt('This is a best of 5 series. The first to 3 wins will be the grand winner!');
 
-  // Ask the user to select rock, paper, or scissors.
-  prompt(`Choose one: ${VALID_CHOICES.join(', ')}`);
-  let choice = readline.question();
+  while (playerScore < 3 && computerScore < 3) {
+    // Ask the user for a selection.
+    let selection = getUserChoice();
 
-  // Validate the user's input.
-  while (!VALID_CHOICES.includes(choice)) {
-    prompt("That's not a valid choice.");
-    choice = readline.question();
+    // Validate the user's input.
+    let choice = validChoice(selection);
+
+    // Generate a random choice for the computer from VALID_CHOICES.
+    let computerChoice = getComputerChoice(VALID_CHOICES);
+
+    // Let the user know what the choices are.
+    prompt(`You chose ${VALID_CHOICES[choice]}, computer chose ${VALID_CHOICES[computerChoice]}.`);
+
+    // Call the displayWinner function
+    let winner = displayWinner(VALID_CHOICES[choice], VALID_CHOICES[computerChoice]);
+
+    // Update the overall score for the user and computer.
+    updateScore(winner);
+
+    // Check if any score has reached 3 wins.
+    checkScore();
   }
-
-  // Generate a random choice for the computer from VALID_CHOICES.
-  let randomIndex = Math.floor(Math.random() * VALID_CHOICES.length);
-  let computerChoice = VALID_CHOICES[randomIndex];
-
-  // Let the user know what the choices are.
-  prompt(`You chose ${choice}, computer chose ${computerChoice}.`);
-
-  // Call the displayWinner function
-  displayWinner(choice, computerChoice);
-
   // Ask the user if they would like to play again.
-  prompt('Would you like to play again (y/n)?');
-  let answer = readline.question().toLowerCase();
-  while (answer[0] !== 'n' && answer !== 'y') {
-    prompt('Please enter "y" or "n".');
-    answer = readline.question().toLowerCase();
-  }
-
-  if (answer[0] !== 'y') break;
+  prompt('Would you like to play again (yes/no)?');
+  let answer = playAgain();
+  if (answer === 'no') break;
 }
