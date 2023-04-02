@@ -14,6 +14,14 @@ const VALID_CHOICES = {
   sp: 'spock',
 };
 
+// An object to store valid answers to play again.
+const VALID_ANSWERS = {
+  y: 'y',
+  yes: 'yes',
+  n: 'n',
+  no: 'no'
+};
+
 // Variables to store the scores for the user and computer.
 let playerScore = 0;
 let computerScore = 0;
@@ -29,6 +37,7 @@ function updateScore(winner) {
   }
 }
 
+// A function for greeting the user to the game.
 function welcomeUser() {
   let greeting = `Welcome to Rock, Paper, Scissors, Lizard, Spock!
   Rules of the game: 
@@ -41,7 +50,7 @@ function welcomeUser() {
   - Lizard beats Spock/Paper
   - Spock beats Rock/Scissors
   
-  This is a best of 5 series. The first to 3 wins will be the grand winner!`;
+  This is a best of 5 series. The first to 3 wins will be the grand winner!\n`;
   prompt(greeting);
 }
 
@@ -92,6 +101,7 @@ function scoreReset() {
   computerScore = 0;
 }
 
+// A function to allow user to view score, and separate rounds.
 function nextRound() {
   prompt("Press 'Enter' to continue.");
   let next = readline.question();
@@ -109,10 +119,10 @@ function nextRound() {
 function playAgain() {
   scoreReset();
   let choice = readline.question().toLowerCase();
-  while (choice !== 'yes' && choice !== 'no') {
+  while (!VALID_ANSWERS.hasOwnProperty(choice)) {
     prompt("That's not a valid choice.");
     choice = readline.question().toLowerCase();
-    if (choice === 'yes' || choice === 'no') {
+    if (VALID_ANSWERS.hasOwnProperty(choice)) {
       break;
     }
   }
@@ -177,5 +187,5 @@ while (true) {
   // Ask the user if they would like to play again.
   prompt('Would you like to play again (yes/no)?');
   let answer = playAgain();
-  if (answer === 'no') break;
+  if (answer[0] !== 'y') break;
 }
