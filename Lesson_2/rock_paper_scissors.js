@@ -11,7 +11,7 @@ const VALID_CHOICES = {
   p: 'paper',
   s: 'scissors',
   l: 'lizard',
-  S: 'spock'
+  sp: 'spock',
 };
 
 // Variables to store the scores for the user and computer.
@@ -27,6 +27,22 @@ function updateScore(winner) {
   } else {
     console.log('Score stays the same.');
   }
+}
+
+function welcomeUser() {
+  let greeting = `Welcome to Rock, Paper, Scissors, Lizard, Spock!
+  Rules of the game: 
+  1. Select 1 of the 5 options.
+  2. Your opponent (the computer) will randomly select one also.
+  3. The selections will be compared to one another to determine who wins the game.
+  - Rock beats Scissors/Lizard
+  - Scissors beats Lizard/Paper
+  - Paper beats Spock/Rock
+  - Lizard beats Spock/Paper
+  - Spock beats Rock/Scissors
+  
+  This is a best of 5 series. The first to 3 wins will be the grand winner!`;
+  prompt(greeting);
 }
 
 // A function to check for a grand winner.
@@ -56,11 +72,11 @@ function getComputerChoice(obj) {
 
 // A function to validate the user's input.
 function validChoice(choice) {
-  while (!VALID_CHOICES.hasOwnProperty(choice)) {
+  while (!VALID_CHOICES.hasOwnProperty(choice.toLowerCase())) {
     prompt("That's not a valid choice.");
     choice = readline.question();
   }
-  return choice;
+  return choice.toLowerCase();
 }
 
 // A function to get the users input.
@@ -74,6 +90,19 @@ function getUserChoice() {
 function scoreReset() {
   playerScore = 0;
   computerScore = 0;
+}
+
+function nextRound() {
+  prompt("Press 'Enter' to continue.");
+  let next = readline.question();
+  while (next !== "") {
+    prompt("Please press 'Enter' to continue.");
+    next = readline.question();
+    if (next === "") {
+      break;
+    }
+  }
+  return console.clear();
 }
 
 // A function to ask the user if they want to play again.
@@ -115,29 +144,35 @@ function displayWinner (choice, computerChoice) {
 
 while (true) {
   console.clear();
-  prompt('This is a best of 5 series. The first to 3 wins will be the grand winner!');
-
+  // Welcome the user to the game.
+  welcomeUser();
   while (playerScore < 3 && computerScore < 3) {
-    // Ask the user for a selection.
-    let selection = getUserChoice();
+    while (true) {
+      // Ask the user for a selection.
+      let selection = getUserChoice();
 
-    // Validate the user's input.
-    let choice = validChoice(selection);
+      // Validate the user's input.
+      let choice = validChoice(selection);
 
-    // Generate a random choice for the computer from VALID_CHOICES.
-    let computerChoice = getComputerChoice(VALID_CHOICES);
+      // Generate a random choice for the computer from VALID_CHOICES.
+      let computerChoice = getComputerChoice(VALID_CHOICES);
 
-    // Let the user know what the choices are.
-    prompt(`You chose ${VALID_CHOICES[choice]}, computer chose ${VALID_CHOICES[computerChoice]}.`);
+      // Let the user know what has been chosen.
+      prompt(`You chose ${VALID_CHOICES[choice]}, computer chose ${VALID_CHOICES[computerChoice]}.`);
 
-    // Call the displayWinner function
-    let winner = displayWinner(VALID_CHOICES[choice], VALID_CHOICES[computerChoice]);
+      // Call the displayWinner function
+      let winner = displayWinner(VALID_CHOICES[choice], VALID_CHOICES[computerChoice]);
 
-    // Update the overall score for the user and computer.
-    updateScore(winner);
+      // Update the overall score for the user and computer.
+      updateScore(winner);
 
-    // Check if any score has reached 3 wins.
-    checkScore();
+      // Check if any score has reached 3 wins.
+      checkScore();
+
+      // Give the user time to read the scores, clear the console, and continue the game.
+      nextRound();
+      break;
+    }
   }
   // Ask the user if they would like to play again.
   prompt('Would you like to play again (yes/no)?');
