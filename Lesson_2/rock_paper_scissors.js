@@ -22,9 +22,13 @@ const VALID_ANSWERS = {
   no: 'no'
 };
 
+// Constant to store the number of games needed to be grand winner.
+const WINNING_SCORE = 3;
+
 // Variables to store the scores for the user and computer.
 let playerScore = 0;
 let computerScore = 0;
+
 
 // A function to update the score.
 function updateScore(winner) {
@@ -35,6 +39,11 @@ function updateScore(winner) {
   } else {
     console.log('Score stays the same.');
   }
+}
+
+// A function to display the game score.
+function displayScore() {
+  console.log(`Player score: ${playerScore} | Computer score: ${computerScore}`);
 }
 
 // A function for greeting the user to the game.
@@ -54,14 +63,12 @@ function welcomeUser() {
   prompt(greeting);
 }
 
-// A function to check for a grand winner.
-function checkScore() {
-  if (playerScore === 3) {
+// A function to display a grand winner.
+function displayGrandWinner() {
+  if (playerScore === WINNING_SCORE) {
     console.log('You are the grand winner!');
-  } else if (computerScore === 3) {
+  } else if (computerScore === WINNING_SCORE) {
     console.log('The computer is the grand winner!');
-  } else {
-    console.log(`Player score: ${playerScore} | Computer score: ${computerScore}`);
   }
 }
 
@@ -135,19 +142,27 @@ function prompt(message) {
 }
 
 // A function to display the winner.
-function displayWinner (choice, computerChoice) {
+function displayWinner(winner) {
+  if (winner === 'user') {
+    prompt('You win!');
+  } else if (winner === 'computer') {
+    prompt('Computer wins!');
+  } else {
+    prompt("It's a tie!");
+  }
+}
+
+// A function to determine the winner.
+function getWinner (choice, computerChoice) {
   if ((choice === 'rock' && (computerChoice === 'scissors' || computerChoice === 'lizard')) ||
       (choice === 'paper' && (computerChoice === 'rock' || computerChoice === 'spock')) ||
       (choice === 'scissors' && (computerChoice === 'paper' || computerChoice === 'lizard')) ||
       (choice === 'lizard' && (computerChoice === 'paper' || computerChoice === 'spock')) ||
       (choice === 'spock' && (computerChoice === 'rock' || computerChoice === 'scissors'))) {
-    prompt('You win!');
     return 'user';
   } else if (choice === computerChoice) {
-    prompt("It's a tie!");
     return 'tie';
   } else {
-    prompt("Computer wins!");
     return 'computer';
   }
 }
@@ -170,14 +185,20 @@ while (true) {
       // Let the user know what has been chosen.
       prompt(`You chose ${VALID_CHOICES[choice]}, computer chose ${VALID_CHOICES[computerChoice]}.`);
 
-      // Call the displayWinner function
-      let winner = displayWinner(VALID_CHOICES[choice], VALID_CHOICES[computerChoice]);
+      // Call the getWinner function
+      let winner = getWinner(VALID_CHOICES[choice], VALID_CHOICES[computerChoice]);
+
+      // Display the winner.
+      displayWinner(winner);
 
       // Update the overall score for the user and computer.
       updateScore(winner);
 
+      // Display the current wins for both players.
+      displayScore();
+
       // Check if any score has reached 3 wins.
-      checkScore();
+      displayGrandWinner();
 
       // Give the user time to read the scores, clear the console, and continue the game.
       nextRound();
