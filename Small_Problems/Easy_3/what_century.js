@@ -22,7 +22,7 @@ function century(year) {
   } else {
     ending += 'th';
   }
-  console.log(century + ending);
+  return century + ending;
 }
 
 century(2000);        // "20th"
